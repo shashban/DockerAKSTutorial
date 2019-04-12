@@ -19,7 +19,7 @@ variables:
   # Kubernetes Namespace
   k8sNamespace: 'default'
   # kubernetes manifest file
-  k8sManifests: 'AKSDeployment.yaml'
+  k8sManifests: 'manifests/*'
   # Agent Pool Name
   poolName: 'Hosted Ubuntu 1604'
 
