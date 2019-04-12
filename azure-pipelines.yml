@@ -28,6 +28,7 @@ stages:
         command: buildAndPush
         repository: 'aksdockersample/aks-docker-sample'
         containerRegistry: 'bfcbc9a8-079f-469d-889b-db8b10b4eb59'
+        Dockerfile: dockerfile
         tags: |
          $(Build.BuildId)
          latest
