@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: aks-docker-sample
-        image: madhuvdockersample.azurecr.io/madhuv-docker-sample:latest
+        image: aksdockersample.azurecr.io/aks-docker-sample:latest
         ports:
         - containerPort: 8181
 ---
