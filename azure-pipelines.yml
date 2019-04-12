@@ -39,7 +39,7 @@ stages:
           - task: PowerShell@2
             inputs:
               targetType: 'inline'
-              script: 'ls ; git clone https://github.com/madhuv-msft/DockerAKSTutorial.git .;'
+              script: 'ls ; git clone https://github.com/madhuv-msft/DockerAKSTutorial.git . ;'
               errorActionPreference: 'continue'
           - task: KubernetesManifest@0
             displayName: 'Deploy to Kubernetes cluster'
