@@ -48,5 +48,6 @@ stages:
             displayName: Deploy to Kubernetes cluster
             inputs:
               kubernetesServiceConnection: '5f552435-78fd-4ba0-b3ce-9d63384ca426'
-              manifests: AKSDeployment.yaml
+              action: 'deploy'
+              manifests: 'AKSDeployment.yaml'
               containers: 'aksdockersample/aks-docker-sample:$(Build.BuildId)'
