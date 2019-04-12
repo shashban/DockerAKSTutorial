@@ -67,4 +67,4 @@ stages:
               action: 'deploy'
               namespace: $(k8sNamespace)
               manifests: $(k8sManifests)
-              containers: $(imageRepositoryFullPath):$(Build.BuildId)'
+              containers: $(imageRepositoryFullPath):$(Build.BuildId)
