@@ -24,9 +24,33 @@ variables:
   poolName: 'Hosted Ubuntu 1604'
 
 stages:
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: 'Build job'
+    
+    steps:
+    - task: Docker@2
+      displayName: 'Docker login'
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        command: login
+
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepositoryFullPath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        Dockerfile: $(dockerfilePath)
+        tags: |
+         $(Build.BuildId)
+         latest
+
 - stage: Deploy
   displayName: 'Deploy stage'
-  # dependsOn: Build
+  dependsOn: Build
   jobs:
   - deployment: Deploy
     displayName: Deploy job
@@ -36,17 +60,11 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: CmdLine@2
-            inputs:
-              script: 'dir'
           - task: PowerShell@2
             inputs:
               targetType: 'inline'
-              script: 'get-childitem . ; git clone https://github.com/madhuv-msft/DockerAKSTutorial.git . ;'
+              script: 'git clone https://github.com/madhuv-msft/DockerAKSTutorial.git . ;'
               errorActionPreference: 'continue'
-          - task: CmdLine@2
-            inputs:
-              script: 'dir'
           - task: KubernetesManifest@0
             displayName: 'Deploy to Kubernetes cluster'
             inputs:
@@ -54,4 +72,4 @@ stages:
               action: 'deploy'
               namespace: $(k8sNamespace)
               manifests: $(k8sManifests)
-              containers: $(imageRepositoryFullPath):latest
+              containers: $(imageRepositoryFullPath):$(Build.BuildId)
