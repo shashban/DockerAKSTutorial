@@ -39,7 +39,8 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy job
-    environment: $(DeployEnvironmentName)
+    # should we not have a way to mention this like $(DeployEnvironmentName) ?
+    environment: 'Madhuv-Play.default'
     strategy:
       runOnce:
         deploy:
