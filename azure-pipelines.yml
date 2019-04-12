@@ -39,7 +39,7 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy job
-    environment: 'Madhuv-Play.default'
+    environment: $(DeployEnvironmentName)
     strategy:
       runOnce:
         deploy:
