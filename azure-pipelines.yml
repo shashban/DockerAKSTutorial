@@ -36,11 +36,17 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: CmdLine@2
+            inputs:
+              script: 'dir'
           - task: PowerShell@2
             inputs:
               targetType: 'inline'
-              script: 'ls ; git clone https://github.com/madhuv-msft/DockerAKSTutorial.git . ;'
+              script: 'get-childitem . ; git clone https://github.com/madhuv-msft/DockerAKSTutorial.git . ;'
               errorActionPreference: 'continue'
+          - task: CmdLine@2
+            inputs:
+              script: 'dir'
           - task: KubernetesManifest@0
             displayName: 'Deploy to Kubernetes cluster'
             inputs:
