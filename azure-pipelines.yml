@@ -1,0 +1,52 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: Build job
+    
+    steps:
+    - task: Docker@2
+      displayName: 'Docker login'
+      inputs:
+        containerRegistry: 'bfcbc9a8-079f-469d-889b-db8b10b4eb59'
+        command: login
+
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'aksdockersample/aks-docker-sample'
+        containerRegistry: 'bfcbc9a8-079f-469d-889b-db8b10b4eb59'
+        tags: |
+         $(Build.BuildId)
+         latest
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy job
+    environment: 'Madhuv-Play.default'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              kubernetesServiceConnection: '5f552435-78fd-4ba0-b3ce-9d63384ca426'
+              manifests: AKSDeployment.yaml
+              containers: 'aksdockersample/aks-docker-sample:$(Build.BuildId)'
