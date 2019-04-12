@@ -5,6 +5,21 @@ resources:
 - repo: self
 
 variables:
+  # Container registry service connection established during pipeline creation - Docker Hub/ACR/...
+  dockerRegistryServiceConnection: 'bfcbc9a8-079f-469d-889b-db8b10b4eb59'
+  # Kubernetes service connection
+  kubernetesServiceConnection: '5f552435-78fd-4ba0-b3ce-9d63384ca426'
+  # Docker repository image full path
+  imageRepositoryFullPath: 'aksdockersample/aks-docker-sample'
+  # docker file path in the github repo
+  dockerfilePath: 'dockerfile'  
+  # Environment name
+  # should we not have a way to mention this like $(DeployEnvironmentName) ?
+  deployEnvironmentName: 'Madhuv-Play.default'
+  # Kubernetes Namespace
+  k8sNamespace: 'default'
+  # kubernetes manifest file
+  k8sManifests: 'AKSDeployment.yaml'
   # Agent Pool Name
   poolName: 'Hosted Ubuntu 1604'
 
@@ -13,42 +28,42 @@ stages:
   displayName: Build stage
   jobs:  
   - job: Build
-    displayName: Build job
+    displayName: 'Build job'
     
     steps:
     - task: Docker@2
       displayName: 'Docker login'
       inputs:
-        containerRegistry: 'bfcbc9a8-079f-469d-889b-db8b10b4eb59'
+        containerRegistry: $(dockerRegistryServiceConnection)
         command: login
 
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: 'aksdockersample/aks-docker-sample'
-        containerRegistry: 'bfcbc9a8-079f-469d-889b-db8b10b4eb59'
-        Dockerfile: dockerfile
+        repository: $(imageRepositoryFullPath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        Dockerfile: $(dockerfilePath)
         tags: |
          $(Build.BuildId)
          latest
 
 - stage: Deploy
-  displayName: Deploy stage
+  displayName: 'Deploy stage'
   dependsOn: Build
   jobs:
   - deployment: Deploy
     displayName: Deploy job
-    # should we not have a way to mention this like $(DeployEnvironmentName) ?
-    environment: 'Madhuv-Play.default'
+    environment: $(deployEnvironmentName)
     strategy:
       runOnce:
         deploy:
           steps:
           - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
+            displayName: 'Deploy to Kubernetes cluster'
             inputs:
-              kubernetesServiceConnection: '5f552435-78fd-4ba0-b3ce-9d63384ca426'
+              kubernetesServiceConnection: $(kubernetesServiceConnection)
               action: 'deploy'
-              manifests: 'AKSDeployment.yaml'
-              containers: 'aksdockersample/aks-docker-sample:$(Build.BuildId)'
+              namespace: $(k8sNamespace)
+              manifests: $(k8sManifests)
+              containers: $(imageRepositoryFullPath):$(Build.BuildId)'
