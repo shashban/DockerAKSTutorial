@@ -24,33 +24,8 @@ variables:
   poolName: 'Hosted Ubuntu 1604'
 
 stages:
-- stage: Build
-  displayName: Build stage
-  jobs:  
-  - job: Build
-    displayName: 'Build job'
-    
-    steps:
-    - task: Docker@2
-      displayName: 'Docker login'
-      inputs:
-        containerRegistry: $(dockerRegistryServiceConnection)
-        command: login
-
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepositoryFullPath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        Dockerfile: $(dockerfilePath)
-        tags: |
-         $(Build.BuildId)
-         latest
-
 - stage: Deploy
   displayName: 'Deploy stage'
-  dependsOn: Build
   jobs:
   - deployment: Deploy
     displayName: Deploy job
@@ -68,3 +43,4 @@ stages:
               namespace: $(k8sNamespace)
               manifests: $(k8sManifests)
               containers: $(imageRepositoryFullPath):$(Build.BuildId)
+
