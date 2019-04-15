@@ -2,6 +2,8 @@ var http = require('http');
 
 var handleRequest = function(request, response) {
   console.log(new Date() + ' :: Received request for URL: ' + request.url);
+  console.log('##[section]Some section');
+  console.log('##[warning]Some warning');
   response.writeHead(200);
   const responseText = '<!DOCTYPE html>'
     + '<html>'
