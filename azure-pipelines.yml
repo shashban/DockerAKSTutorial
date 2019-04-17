@@ -26,7 +26,7 @@ stages:
   displayName: BuildImage
   jobs:  
   - job: Build
-    displayName: 'Build job'
+    displayName: 'BuildJob'
     
     steps:
     - task: Docker@2
@@ -46,17 +46,17 @@ stages:
          $(Build.BuildId)
          latest
   - job: Build2
-    displayName: Build2 Job
+    displayName: Build2Job
     steps:
     - script: echo build2
       
 - stage: Deploy
-  displayName: 'Deploy stage'
+  displayName: 'Deploy Image'
   dependsOn: Build
   condition: failed()
   jobs:
   - deployment: Deploy
-    displayName: DeployImage
+    displayName: DeployJob
     # can not w euse variables?
     environment: 'Madhuv-Play.default'
     strategy:
