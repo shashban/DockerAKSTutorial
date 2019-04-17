@@ -32,7 +32,7 @@ stages:
     
     steps:
     - task: Docker@2
-      displayName: 'Docker login1'
+      displayName: 'Docker login'
       inputs:
         containerRegistry: $(dockerRegistryServiceConnection)
         command: login
