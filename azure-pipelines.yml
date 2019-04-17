@@ -1,8 +1,6 @@
 trigger:
 - master
-
-resources:
-- repo: self
+- users/shashban
 
 variables:
   # Container registry service connection established during pipeline creation - Docker Hub/ACR/...
