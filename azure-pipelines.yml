@@ -18,8 +18,7 @@ variables:
   k8sNamespace: 'default'
   # kubernetes manifest file
   k8sManifests: 'AKSDeployment.yaml'
-  # Agent Pool Name
-  poolName: 'Hosted Ubuntu 1604'
+  
 
 stages:
 - stage: Build
