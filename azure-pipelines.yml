@@ -47,7 +47,11 @@ stages:
         tags: |
          $(Build.BuildId)
          latest
-
+    - job: Build2
+      displayName: Build2 Job
+      steps:
+      - script: echo build2
+      
 - stage: Deploy
   displayName: 'Deploy stage'
   dependsOn: Build
